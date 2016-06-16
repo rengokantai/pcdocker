@@ -82,3 +82,37 @@ build and run
 sudo docker build -t hit_unittest .
 sudo docker run --rm -it hit_unittest .
 ```
+######Integrating Docker(Jenkins) 2.9
+port=8080
+```
+wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-get update
+sudo apt-get install jenkins
+service jenkins start
+```
+get password to unlock:
+```
+cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+add user jenkins to docker group
+```
+gpasswd -a jenkins docker
+service jenkins restart
+```
+
+visudo
+```
+# User privilege specification
+root    ALL=(ALL:ALL) ALL
+jenkins ALL=(ALL) NOPASSWD:ALL
+```
+for build step ,use sudo.
+#####Chapter 13. Debugging Containers
+######Process level isolation for Docker containers
+```
+docker run -it --rm ubuntu /bin/bash
+docker inspect --format "{{.State.Pid}}" 12345
+ps -pf 123
+cat -v /proc/123/environ
+```
